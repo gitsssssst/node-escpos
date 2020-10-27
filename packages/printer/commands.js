@@ -94,6 +94,8 @@ _.PAPER = {
   PAPER_PART_CUT: '\x1d\x56\x01', // Partial cut paper
   PAPER_CUT_A: '\x1d\x56\x41', // Partial cut paper
   PAPER_CUT_B: '\x1d\x56\x42', // Partial cut paper
+  MASUNG_D347_PAPER_FULL_CUT: '\x1b\x69',
+  MASUNG_D347_PAPER_PART_CUT: '\x1b\x6d',
 };
 
 /**
@@ -108,12 +110,12 @@ _.TEXT_FORMAT = {
   TXT_4SQUARE: '\x1b\x21\x30', // Double width & height text
 
   TXT_CUSTOM_SIZE: function(width, height) { // other sizes
-    
+
     width = width > 7 ? 7 : width;
     width = width < 0 ? 0 : width;
     height = height > 7 ? 7 : height;
     height = height < 0 ? 0 : height;
-    
+
     var widthDec = width * 16; // Values between 0-7
     var heightDec = height; // Values between 0-7
     var sizeDec = widthDec + heightDec;
@@ -306,7 +308,7 @@ _.GSV0_FORMAT = {
  * @type {string}
  */
 _.BEEP = '\x1b\x42', // Printer Buzzer pre hex
-  
+
 /**
  * [COLOR description]
  * @type {Object}
