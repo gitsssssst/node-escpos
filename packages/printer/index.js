@@ -43,7 +43,7 @@ util.inherits(Printer, EventEmitter);
 
 /**
  * Set printer model to recognize model-specific commands.
- * Supported models: [ null, 'qsprinter' ]
+ * Supported models: [ null, 'qsprinter', 'masung-d347 ]
  *
  * For generic printers, set model to null
  *
@@ -486,7 +486,7 @@ Printer.prototype.style = function (type) {
  * @return {[Printer]} printer  [the escpos printer instance]
  */
 Printer.prototype.size = function (width, height) {
-  
+
   this.buffer.write(_.TEXT_FORMAT.TXT_CUSTOM_SIZE(width, height));
 
   return this;
