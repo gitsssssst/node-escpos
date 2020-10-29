@@ -28,7 +28,7 @@ function Printer(adapter, options) {
   this.buffer = new MutableBuffer();
   this.encoding = options && options.encoding || 'GB18030';
   this.width = options && options.width || 48;
-  this._model = null;
+  this._model = options && options.model || null;
 };
 
 Printer.create = function (device) {
@@ -43,7 +43,7 @@ util.inherits(Printer, EventEmitter);
 
 /**
  * Set printer model to recognize model-specific commands.
- * Supported models: [ null, 'qsprinter' ]
+ * Supported models: [ null, 'qsprinter', 'masung-d347' ]
  *
  * For generic printers, set model to null
  *
@@ -486,7 +486,7 @@ Printer.prototype.style = function (type) {
  * @return {[Printer]} printer  [the escpos printer instance]
  */
 Printer.prototype.size = function (width, height) {
-  
+
   this.buffer.write(_.TEXT_FORMAT.TXT_CUSTOM_SIZE(width, height));
 
   return this;
@@ -797,9 +797,15 @@ Printer.prototype.flush = function (callback) {
  */
 Printer.prototype.cut = function (part, feed) {
   this.feed(feed || 3);
-  this.buffer.write(_.PAPER[
-    part ? 'PAPER_PART_CUT' : 'PAPER_FULL_CUT'
-  ]);
+  if (this._model === 'masung-d347') {
+    this.buffer.write(_.PAPER[
+      part ? 'MASUNG_D347_PAPER_PART_CUT' : 'MASUNG_D347_PAPER_FULL_CUT'
+    ]);
+  } else {
+    this.buffer.write(_.PAPER[
+      part ? 'PAPER_PART_CUT' : 'PAPER_FULL_CUT'
+    ]);
+  }
   return this;
 };
 
