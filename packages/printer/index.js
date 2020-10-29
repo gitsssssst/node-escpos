@@ -867,6 +867,11 @@ Printer.prototype.raw = function raw(data) {
 };
 
 
+Printer.prototype.abs = function () {
+  this.buffer.write('\x1d\x61\xff');
+  return this;
+}
+
 /**
  * get one specific status from the printer
  * @param  {string} statusClassName
@@ -878,7 +883,6 @@ Printer.prototype.getStatus = function(statusClassName, callback) {
     const byte = data.readInt8(0);
 
     const status = new statuses[statusClassName](byte);
-
     callback(status);
   })
 

@@ -128,12 +128,24 @@ USB.prototype.open = function (callback){
             if(endpoint.direction == 'out' && !self.endpoint) {
               self.endpoint = endpoint;
             }
+            if(endpoint.direction == 'in' && !self.inendpoint) {
+              self.inendpoint = endpoint;
+            }
           });
           if(self.endpoint) {
             self.emit('connect', self.device);
             callback && callback(null, self);
           } else if(++counter === this.device.interfaces.length && !self.endpoint){
             callback && callback(new Error('Can not find endpoint from printer'));
+          }
+          if(self.inendpoint) {
+            // self.inendpoint.startPoll(3, 1000);
+            // self.inendpoint.emit('data', data);
+            // self.inendpoint.on('data', function (data) {
+            //   if (data.length > 0) {
+            //     console.log(data);
+            //   }
+            // })
           }
         } catch (e) {
           // Try/Catch block to prevent process from exit due to uncaught exception.
@@ -157,6 +169,34 @@ USB.prototype.write = function(data, callback){
   this.emit('data', data);
   this.endpoint.transfer(data, callback);
   return this;
+};
+
+/**
+ * [function read]
+ * @param  {[type]} data [description]
+ * @return {[type]}      [description]
+ */
+USB.prototype.read = function(callback){
+  this.inendpoint.startPoll(3, 1000);
+  this.inendpoint.on('data', function(data) {
+    callback(data);
+  });
+  return this;
+  // this.inendpoint.transferType = 2;
+  // this.inendpoint.transfer(64, function (error, data) {
+  //     if (!error) {
+  //         this.emit('data', data.toString('hex'));
+  //     } else {
+  //         console.log(error);
+  //     }
+  // });
+
+  // this.inendpoint.on('data', function (data) {
+  //     console.log('listener: ' + data);
+  //     callback(data);
+  // });
+
+  // return this;
 };
 
 USB.prototype.close = function(callback){
